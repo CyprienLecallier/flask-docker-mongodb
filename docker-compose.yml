@@ -1,0 +1,31 @@
+version: '3'
+services:
+    flask:
+        build: .
+        command: ./server.py
+        ports:
+            - "5000:5000"
+        volumes:
+            - .:/app
+        links:
+            - mongodb
+        networks:
+                        - db_net
+
+    mongodb:
+        image: mongo:latest
+        volumes:
+            - ./data/:/data/db
+        ports:
+            - "27017:27017"
+        environment:
+            - AUTH=yes
+            - MONGO_INITDB_DATABASE=eggodb
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=admin
+        networks:
+            - db_net
+
+networks:
+    db_net:
+        driver: bridge
